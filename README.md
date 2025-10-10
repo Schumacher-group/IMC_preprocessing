@@ -1,6 +1,14 @@
 # IMC preprocessing
-Extraction and preprocessing pipeline for IMC data. From a single mcd file, it extracts the tiff files using [steinbock](https://bodenmillergroup.github.io/steinbock/)  and run  [IMC denoise](https://github.com/PENGLU-WashU/IMC_Denoise) for denoising. To reduce batch effects, we also recommend applying contrast adjustment through Contrast Limited Adaptive Histogram Equalization.  
-You can also run cell segmentation using [Mesmer](https://github.com/vanvalenlab/deepcell-tf), and create a cell table for cell based analysis using [ark-analysis](https://github.com/angelolab/ark-analysis). 
+Extraction and preprocessing pipeline for IMC data. From a single mcd file, it extracts the tiff files using [steinbock](https://bodenmillergroup.github.io/steinbock/)  and run  [IMC denoise](https://github.com/PENGLU-WashU/IMC_Denoise) for denoising. To reduce batch effects, we also recommend applying contrast adjustment through Contrast Limited Adaptive Histogram Equalization.
+You can also run cell segmentation using [Mesmer](https://github.com/vanvalenlab/deepcell-tf), and create a cell table for cell based analysis using [ark-analysis](https://github.com/angelolab/ark-analysis).
+
+## Citation
+This pipeline was used in the following preprint:
+
+**"Identifying tissue states by spatial protein patterns related to chemotherapy response in triple-negative breast cancer"**
+bioRxiv (2025). DOI: [10.1101/2025.10.06.680783](https://www.biorxiv.org/content/10.1101/2025.10.06.680783)
+
+If you use this pipeline in your work, please consider citing the preprint. 
 ## Installation
 If you want to run all of the steps above, there is not an environment that workas for all together. Therefore, I recommend you create 3 different python environments.
 ### Install dependences

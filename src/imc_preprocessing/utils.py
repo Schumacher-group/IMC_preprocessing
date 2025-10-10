@@ -18,17 +18,6 @@ def load_config(filename):
 	"""
 	with open(filename, 'r') as f:
 		return yaml.safe_load(f)
-	
-def check_paths(config):
-	'''Check whether paths are valid'''
-	mcd_folder_path = Path(config['root_data_folder'])/Path(config['mcd_data_folder'])
-	if not mcd_folder_path.is_dir():
-		logging.WARNING(mcd_folder_path +' does not exists')
-	if config['extraction'] == 'no':
-		# if titiff folder is not generated, it must exist before.
-		tiff_folder_path = Path(config['root_data_folder'])/Path('tiff_folder_name_split')
-		if not tiff_folder_path.is_dir():
-			raise ValueError(tiff_folder_path +' does not exists')
 
 def format_sample_metadata(config_generic,config_metadata):
 	'''
