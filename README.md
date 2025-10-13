@@ -12,6 +12,7 @@ If you use this pipeline in your work, please consider citing the preprint.
 
 ## Downstream analysis
 Downstream analysis is handled in a different repository: https://github.com/Schumacher-group/IMC_TNBC_analysis
+Prediction of therapy response based on the analysed data is handled in: https://github.com/Schumacher-group/ML4SpatialAnalysis
 
 ## Installation
 If you want to run all of the steps above, there is not an environment that workas for all together. Therefore, I recommend you create 3 different python environments.
