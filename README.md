@@ -9,6 +9,10 @@ This pipeline was used in the following preprint:
 bioRxiv (2025). DOI: [10.1101/2025.10.06.680783](https://www.biorxiv.org/content/10.1101/2025.10.06.680783)
 
 If you use this pipeline in your work, please consider citing the preprint. 
+
+## Downstream analysis
+Downstream analysis is handled in a different repository: https://github.com/Schumacher-group/IMC_TNBC_analysis
+
 ## Installation
 If you want to run all of the steps above, there is not an environment that workas for all together. Therefore, I recommend you create 3 different python environments.
 ### Install dependences
