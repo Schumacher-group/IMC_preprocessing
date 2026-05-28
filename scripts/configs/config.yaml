@@ -3,21 +3,31 @@ root_data_folder:  '../../' # it is the path to the folder that contains IMC_dat
 mcd_data_folder : 'IMC_data'
 extraction: 'no' #choose between no, all, mcd_2_ome_tiff,ome_tiff_2_tiff,rename_leap_id, see reformatting_all_files.py for more info
 #folder name where tiff files are saved. No skips the extractions
-tiff_folder_name_split: 'split_channels_nohpf' #folder where tiff are split channel by channel. Data are saved in root_data_folder/tiff_folder_name_split
+tiff_folder_name_split: 'split_channels_nohpf' #folder where tiff are split channel by channel. Data are saved in root_data_folder/tiff_folder_name_split.
+# NOTE: the 'nohpf' suffix is historical and refers to the steinbock spatial hot-pixel filter NOT being applied here. Hot-pixel removal in this pipeline is done downstream by IMC_Denoise / DIMR (see IMC_Denoise.params below).
 tiff_folder_name_combined: 'combined_tiff' #folder containing a multichannel tiff per fov, subnfolder of root_data_folder
 biosamples_file : '../processed_files/processed_response.csv' # output path to where file containing the metadata for each Leap id is created.
-# IMC denoise parameters
+# IMC denoise parameters.
+# This block configures both hot-pixel removal (DIMR) and shot-noise denoising (DeepSNiF).
+# To reproduce the cell table deposited at BioStudies S-BIAD2027, set `skip: False` so that the
+# DIMR + DeepSNiF chain below is run on every channel except Carboplatin.
 IMC_Denoise:
-  skip : True #True ignore the IMC_Denoise step
+  skip : True # True bypasses both DIMR hot-pixel removal and DeepSNiF denoising. Set to False to reproduce the published pipeline.
   retrain: False #force retrain of the model, False ignores training on markers that already have their weights saved in Save_directory/weights_folder
   weights_folder: 'trained_weights' # subfolder of Save_directory where 'weights_name' and 'loss_name' saved.
   Save_directory : '../processed_files/IMC_Denoise_intermediate_files/' #Folder where the training weights will be saved. If None, it will be saved in the default folder.
   output_directory : '../../Img_Denoised/sept2024_release/non_processed' #path to where processed images are saved, insert absolute or relative path. Relative path refers from the folder where the script `main.py` is run
   channels_to_exclude : 'Carboplatin' #separate channels to be excluded using a comma, e.g. 'channelA,channelB'
   params:
-    n_neighbours : 10 # Larger n enables removing more consecutive hot pixels. 
+    # --- DIMR hot-pixel removal (Lu et al., IMC_Denoise) ---
+    # DIMR identifies hot pixels as outliers relative to their local neighbourhood and replaces them
+    # iteratively. These three parameters were tuned for this TNBC IMC dataset; the criterion used
+    # was visual inspection plus a quantitative check that, after filtering, the distribution of
+    # (max - mean) intensity within 5x5 tiles is continuous (i.e. no residual isolated bright pixels).
+    # Applied to all channels except those listed in channels_to_exclude (Carboplatin).
+    n_neighbours : 10 # Larger n enables removing more consecutive hot pixels.
     n_iter : 3 # Iteration number for DIMR
-    window_size : 5
+    window_size : 5 # Local window (pixels) over which the hot-pixel criterion is evaluated.
   
     # ### DeepSNiF configuration and training
     # Define parameters for DeepSNiF training. If is_load_weights is True, the pre-trained model and pre-calculated range of the marker channel will be loaded. The range value is used for normalization in prediction.

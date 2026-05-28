@@ -85,10 +85,27 @@ Each mcd file may contain several acquisitions. Acquisitions are saved in `tiff_
 ## Directory structure of images for  IMC denoise
 IMC Denoise takes the images from `tiff_folder_name_split` folder, trains and predicts the new processed images to the `output_directory`. Parameters of IMC Denoise can be set up in the file `/scripts/configs/config.yaml`
 Logging is saved in `/scripts/logging.log`
+
+## Hot-pixel filtering
+Hot-pixel removal in this pipeline is performed by the **DIMR** stage of [IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise) (Lu et al.), *not* by the steinbock spatial filter (`filter_hot_pixels` / `create_analysis_stacks` in `src/imc_preprocessing/imcsegpipe/`, which are defined but not called by the pipeline). The split-tiff folder name `split_channels_nohpf` is historical and refers only to the absence of the steinbock filter — DIMR is still applied on top, downstream.
+
+The DIMR parameters used to produce the cell table are pinned in [`scripts/configs/config.yaml`](scripts/configs/config.yaml) under `IMC_Denoise.params`:
+
+| Parameter      | Value | Meaning                                                                 |
+| -------------- | ----- | ----------------------------------------------------------------------- |
+| `n_neighbours` | 10    | Number of neighbouring pixels considered when flagging a hot pixel      |
+| `n_iter`       | 3     | Number of DIMR iterations                                               |
+| `window_size`  | 5     | Local window (pixels) over which the hot-pixel criterion is evaluated   |
+
+The parameters were chosen by visual inspection together with a quantitative criterion: after filtering, the distribution of `(max − mean)` intensity inside 5×5 tiles should be continuous, i.e. no residual isolated bright outliers. DIMR is applied to every channel listed in the panel **except** those in `IMC_Denoise.channels_to_exclude` (Carboplatin, which is processed separately in the post-denoise step).
+
+> **To reproduce the published cell table**, edit `scripts/configs/config.yaml` and set `IMC_Denoise.skip: False`. The default in the repo is `True` only so that downstream steps can be re-run without re-training DeepSNiF.
+
+## Mesmer
 ## Mesmer
 To run Mesmer, run:
 ```
 conda activate deepcell
-python install scripts/Mesmer.py
+python scripts/Mesmer.py
 ```
 
