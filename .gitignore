@@ -1,6 +1,13 @@
 scripts/debug.ipynb
 *.csv
 **/configs/config.yaml
+
+# Local-only metadata-preparation tooling. Superseded by the curated
+# 20240926_info.xlsx provided by the clinical collaborators; the scripts here
+# are kept locally as a record of the earlier scrubbing approach.
+scripts/private/
+.eml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
